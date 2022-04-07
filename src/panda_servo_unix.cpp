@@ -1135,7 +1135,8 @@ generate_data_dynamics_param(franka::Model &model)
 {
   franka::RobotState state;
   const int big=1000000;
-    int count=0,temp;
+  double range = 1.; // set to number between [0,1] for random data vel/acc range
+  int count=0,temp;
 
   /*
   for (int i=0; i<7; ++i) {
@@ -1176,8 +1177,8 @@ generate_data_dynamics_param(franka::Model &model)
 	joint_sim_state[i].thd = -franka::kMaxJointVelocity[i-1];
 
       if (collect_data == COLLECT_RANDOM)
-	joint_sim_state[i].thd = (double)(random_number((long int) (franka::kMaxJointVelocity[i-1]*big),
-							(long int) (-franka::kMaxJointVelocity[i-1]*big)))/
+	joint_sim_state[i].thd = range *(double)(random_number((long int) (franka::kMaxJointVelocity[i-1]*big),
+							       (long int) (-franka::kMaxJointVelocity[i-1]*big)))/
 	  (double)big;   
 
 
@@ -1192,7 +1193,7 @@ generate_data_dynamics_param(franka::Model &model)
 	joint_sim_state[i].thdd = -franka::kMaxJointAcceleration[i-1];
 
       if (collect_data == COLLECT_RANDOM)
-	joint_sim_state[i].thdd = (double)(random_number((long int) (franka::kMaxJointAcceleration[i-1]*big),
+	joint_sim_state[i].thdd = range * (double)(random_number((long int) (franka::kMaxJointAcceleration[i-1]*big),
 							 (long int) (-franka::kMaxJointAcceleration[i-1]*big)))/
 	  (double)big;   
 
