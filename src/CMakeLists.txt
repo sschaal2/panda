@@ -36,11 +36,18 @@ include_directories(BEFORE ../src)
 include_directories(BEFORE ../math)
 include_directories(BEFORE ../../libfranka/include)
 include_directories(BEFORE /usr/include/eigen3)
+include_directories(BEFORE ../../SOEM/install/include/soem)
+
 
 if($ENV{HOST} MATCHES ${PANDA_HOST})
+  link_directories(AFTER ../..//SOEM/install/lib)
   add_definitions(-DPANDA)
   link_directories($ENV{LAB_ROOT}/libfranka/build ${CMAKE_LIBRARY_PATH})
 endif()
+
+# endeffector different from standard Franka
+add_definitions(-DAXIA80)
+add_definitions(-DROBOTIQ2F)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -130,6 +137,6 @@ if($ENV{HOST} MATCHES ${PANDA_HOST})
   target_link_libraries("xr${NAME}" SLcommon utility ${LAB_STD_LIBS})
 
   add_executable(xrprobot ${SRCS_XRPROBOT})
-  target_link_libraries(xrprobot franka SLcommon utility  rt ${LAB_STD_LIBS})
+  target_link_libraries(xrprobot franka SLcommon utility ftcells grippers comm soem rt ${LAB_STD_LIBS})
 
 endif()
