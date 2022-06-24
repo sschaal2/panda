@@ -50,11 +50,12 @@
 #include <franka/gripper.h>
 
 // axia f/t sensor includes
+#ifdef AXIA80
 #include "ethercat_communication.h"
 #include "axia80_ethercat.h"
 using ethercat_communication::EthercatCommunication;
 using axia80_ethercat::Axia80Ethercat;
-
+#endif
 
 #define TRANSLATION_FILE "Translation.cf"
 #define TIME_OUT_NS  NO_WAIT
@@ -68,7 +69,9 @@ double        **joint_lin_rot;
 double         *pos_polar;
 double         *load_polar;
 
+#ifdef AXIA80
 Axia80Ethercat *axia80_ptr;
+#endif
 
 //! local variables
 typedef struct Translation {
@@ -283,12 +286,19 @@ main(int argc, char**argv)
 
 
     // Define callback for the joint torque control loop.
+#ifdef AXIA80    
     std::function<franka::Torques(const franka::RobotState&, franka::Duration)> panda_callback = 
       [&model,&robot,&axia80,&ethercat_mod](const franka::RobotState& state, franka::Duration period) -> franka::Torques {
+#else
+    std::function<franka::Torques(const franka::RobotState&, franka::Duration)> panda_callback = 
+      [&model,&robot](const franka::RobotState& state, franka::Duration period) -> franka::Torques {
+#endif
 
       static int n_calls = 0;
       double ft_in_units[6];
+#ifdef AXIA80          
       axia80_ethercat::Axia80Data data;
+#endif
 
       ++n_calls;
 
@@ -1303,9 +1313,11 @@ compute_ft_offsets(void)
   int    i,j;
   long   last_panda_servo_calls = panda_servo_calls;
 
-  
+
+#ifdef AXIA80      
   // zero the axia80
   axia80_ptr->TareAxia80();
+#endif
 
   // zero computed f/t
   for (i=1; i<= count; ++i) {
