@@ -49,6 +49,9 @@
 // #define FINGER_LENGTH 0.045  //for Franka finger: end of finger
 #define FINGER_LENGTH 0.068     //for Franka-Robotiq finger: end of finger
 
+#define ROBOTIQ_2F_LENGTH 0.1768
+#define AXIA80_ASSEMBLY_LENGTH 0.057
+
 // links of the robot
 enum RobotLinks {
   J2_LINK = 1,

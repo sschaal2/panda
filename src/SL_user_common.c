@@ -118,7 +118,7 @@ setDefaultEndeffector(void) {
     endeff[i].x[_X_]  = 0.0;
     endeff[i].x[_Y_]  = 0.0;
 #ifdef ROBOTIQ2F
-    endeff[i].x[_Z_]  = FL+0.235; // this is the Axia80+Robotiq2f total length
+    endeff[i].x[_Z_]  = FL+ROBOTIQ_2F_LENGTH+AXIA80_ASSEMBLY_LENGTH;
 #else
     endeff[i].x[_Z_]  = FL+FINGER_OFF+FINGER_LENGTH;
 #endif
