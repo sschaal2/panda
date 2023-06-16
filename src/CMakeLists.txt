@@ -46,8 +46,8 @@ if($ENV{HOST} MATCHES ${PANDA_HOST})
 endif()
 
 # endeffector different from standard Franka
-#add_definitions(-DAXIA80)
-#add_definitions(-DROBOTIQ2F)
+add_definitions(-DAXIA80)
+add_definitions(-DROBOTIQ2F)
 
 set(CMAKE_CXX_STANDARD 11)
 
