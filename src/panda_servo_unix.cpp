@@ -326,7 +326,7 @@ main(int argc, char**argv)
       raw_misc_sensors[S_FZ] =  ft_in_units[2];
       raw_misc_sensors[S_MX] =  ft_in_units[3];
       raw_misc_sensors[S_MY] =  ft_in_units[4];
-      raw_misc_sensors[S_MZ] =  ft_in_units[6];
+      raw_misc_sensors[S_MZ] =  ft_in_units[5];
 #else
       // just pretend the sensed load cell is identical to the computed one
       raw_misc_sensors[S_FX] =  raw_misc_sensors[C_FX];

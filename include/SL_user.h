@@ -37,7 +37,7 @@
 #define DHA7  0.088
 
 #define FL    0.107
-#define FL_G  2.356
+#define FL_G  0.7853
 
 // the comuterd F/T sensing is treated in location like a load cellt
 // mounted at the flange. Offsets are relative to panda flange
