@@ -69,6 +69,7 @@ double        **joint_lin_rot;
 double         *pos_polar;
 double         *load_polar;
 
+std::array<double, 7> ttt;
 #ifdef AXIA80
 Axia80Ethercat *axia80_ptr;
 #endif
@@ -366,14 +367,25 @@ main(int argc, char**argv)
 	    tau_d[i] = 0.0;
 	} else {
 	  for (size_t i = 0; i < 7; i++) {
-	    tau_d[i] = raw_desired_torques[i+1] + torque_offset[i+1]; 
+	    tau_d[i] = raw_desired_torques[i+1] + torque_offset[i+1] + u_grav[i+1];
+	    // make sure max/min torques are assured
+	    if (tau_d[i] > 0.99 * u_max[i+1]) {
+	      tau_d[i] = 0.99 * u_max[i+1];
+	      printf("reduced %d to %f\n",i+1,tau_d[i]);
+	    }
+	    if (tau_d[i] < -0.99 * u_max[i+1]) {
+	      tau_d[i] = -0.99 * u_max[i+1];
+	      printf("reduced %d to %f\n",i+1,tau_d[i]);	      
+	    }
+	    ttt[i] = tau_d[i];
+	    tau_d[i] -= u_grav[i+1];	    
 	  }
 	}
       }
       
       // Send torque command.
       return tau_d;
-    };
+      };
 
     // initalize the servo
     if (!init_panda_servo(robot))
@@ -398,6 +410,8 @@ main(int argc, char**argv)
 
   } catch (const franka::Exception& ex) {
     std::cerr << ex.what() << std::endl;
+    for (int i=0; i<7; ++i)
+      printf("%d % 7.3f\n",i+1,ttt[i]);
     std::cout << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
     
@@ -451,6 +465,10 @@ init_panda_servo(franka::Robot &robot)
 
   // read link parameters
   if (!read_link_parameters(config_files[LINKPARAMETERS]))
+    return FALSE;
+
+  // read max controls
+  if (!read_gains(config_files[GAINS],NULL, NULL, NULL))
     return FALSE;
 
   // the the default endeffector parameters
