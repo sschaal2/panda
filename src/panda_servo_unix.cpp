@@ -371,11 +371,11 @@ main(int argc, char**argv)
 	    // make sure max/min torques are assured
 	    if (tau_d[i] > 0.99 * u_max[i+1]) {
 	      tau_d[i] = 0.99 * u_max[i+1];
-	      printf("reduced %d to %f\n",i+1,tau_d[i]);
+	      printf("reduced %ld to %f\n",i+1,tau_d[i]);
 	    }
 	    if (tau_d[i] < -0.99 * u_max[i+1]) {
 	      tau_d[i] = -0.99 * u_max[i+1];
-	      printf("reduced %d to %f\n",i+1,tau_d[i]);	      
+	      printf("reduced %ld to %f\n",i+1,tau_d[i]);	      
 	    }
 	    ttt[i] = tau_d[i];
 	    tau_d[i] -= u_grav[i+1];	    
@@ -1424,7 +1424,10 @@ gripperThread(void *)
 #ifdef ROBOTIQ2F
     char port_name[] = "/dev/ttyUSB1";
     Robotiq2fGripperSerial gripper(0.085, 0., 0.15, 220.,port_name);
-    gripper.GripperInitialization();
+    if (!gripper.GripperInitialization()) {
+      printf("Gripper initialization failed\n");
+      return NULL;
+    }
 #else
     franka::Gripper gripper(ip_string);
 #endif
